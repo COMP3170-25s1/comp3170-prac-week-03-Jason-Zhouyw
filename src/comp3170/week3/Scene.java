@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -30,7 +31,7 @@ public class Scene {
 	private int colourBuffer;
 
 	private Shader shader;
-
+	private Matrix4f modelMatrix = new Matrix4f(); 
 	public Scene() {
 
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
@@ -51,7 +52,7 @@ public class Scene {
 		vertices = new Vector4f[] {
 			new Vector4f( 0, 0, 0, 1),
 			new Vector4f( 0, 1, 0, 1),
-			new Vector4f(-1,-1, 0, 1),
+			new Vector4f(-1f,-1, 0, 1),
 			new Vector4f( 1,-1, 0, 1),
 		};
 			
@@ -77,13 +78,16 @@ public class Scene {
 			// @formatter:on
 
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
-
+		
+		translationMatrix(0f,0.0f, modelMatrix);
+		scaleMatrix(1.5f,1.5f,modelMatrix);
 	}
 
 	public void draw() {
 		
 		shader.enable();
 		// set the attributes
+		shader.setUniform("u_modelMatrix",modelMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_colour", colourBuffer);
 
@@ -135,7 +139,7 @@ public class Scene {
 	public static Matrix4f rotationMatrix(float angle, Matrix4f dest) {
 
 		// TODO: Your code here
-
+		
 		return dest;
 	}
 
@@ -152,6 +156,8 @@ public class Scene {
 	public static Matrix4f scaleMatrix(float sx, float sy, Matrix4f dest) {
 
 		// TODO: Your code here
+		dest.m00(sx);
+		dest.m11(sy);
 
 		return dest;
 	}
