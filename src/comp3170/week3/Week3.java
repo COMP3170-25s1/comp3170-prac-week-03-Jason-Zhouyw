@@ -16,12 +16,14 @@ public class Week3 implements IWindowListener {
 
 	private Window window;
 	private Shader shader;
+	private Arrow arrow;
 	
 	final private File DIRECTORY = new File("src/comp3170/week3"); 
 	
 	private int width = 800;
 	private int height = 800;
 	private Scene scene;
+	private long oldTime;
 	
 	public Week3() throws OpenGLException  {
 		
@@ -54,7 +56,15 @@ public class Week3 implements IWindowListener {
 		glClear(GL_COLOR_BUFFER_BIT);	
 		
 		scene.draw();
+		update();
 	    
+	}
+	
+	public void update() {
+		long time = System.currentTimeMillis();
+		float deltaTime = (time - oldTime)/10000f;
+		oldTime = time;
+		scene.update(deltaTime);
 	}
 
 	@Override

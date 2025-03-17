@@ -18,6 +18,7 @@ import comp3170.GLBuffers;
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
 
+
 public class Scene {
 
 	final private String VERTEX_SHADER = "vertex.glsl";
@@ -31,7 +32,14 @@ public class Scene {
 	private int colourBuffer;
 
 	private Shader shader;
-	private Matrix4f modelMatrix = new Matrix4f(); 
+	 
+	private Matrix4f modelMatrix = new Matrix4f();
+	private Matrix4f transMatrix = new Matrix4f();
+	private Matrix4f scaleMatrix = new Matrix4f();
+	private Matrix4f rotateMatrix = new Matrix4f();
+	final private float rotation = 30f;
+
+	
 	public Scene() {
 
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
@@ -79,9 +87,19 @@ public class Scene {
 
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 		
-		translationMatrix(0f,0.0f, modelMatrix);
-		scaleMatrix(1.5f,1.5f,modelMatrix);
+		translationMatrix(0f,0.0f, transMatrix);
+		rotationMatrix(30f,rotateMatrix);
+		scaleMatrix(1f,1f,scaleMatrix);
+		
+		Vector3f offset = new Vector3f(0.0f,0.0f,0f);
+		float scale = 1f;
+		float rotation = 30f;
+		
+		modelMatrix.mul(transMatrix).mul(rotateMatrix).mul(scaleMatrix);// TRS
+//		modelMatrix.translate(offset).rotateZ(rotation).scale(scale);
+		
 	}
+
 
 	public void draw() {
 		
@@ -97,6 +115,9 @@ public class Scene {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 
+	}
+	public void update(float deltaTime) {
+		modelMatrix.rotateZ(rotation * deltaTime);
 	}
 
 	/**
@@ -139,6 +160,10 @@ public class Scene {
 	public static Matrix4f rotationMatrix(float angle, Matrix4f dest) {
 
 		// TODO: Your code here
+		dest.m00((float) Math.cos(angle));
+		dest.m01((float) Math.sin(angle));
+		dest.m10((float) Math.sin(-angle));
+		dest.m11((float) Math.cos(angle));
 		
 		return dest;
 	}
@@ -154,12 +179,13 @@ public class Scene {
 	 */
 
 	public static Matrix4f scaleMatrix(float sx, float sy, Matrix4f dest) {
-
+		
+		
 		// TODO: Your code here
 		dest.m00(sx);
 		dest.m11(sy);
 
 		return dest;
 	}
-
+	
 }
