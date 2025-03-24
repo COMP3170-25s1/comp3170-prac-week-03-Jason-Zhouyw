@@ -22,6 +22,7 @@ public class Week3 implements IWindowListener {
 	
 	private int width = 800;
 	private int height = 800;
+	
 	private Scene scene;
 	private long oldTime;
 	
@@ -62,7 +63,7 @@ public class Week3 implements IWindowListener {
 	
 	public void update() {
 		long time = System.currentTimeMillis();
-		float deltaTime = (time - oldTime)/10000f;
+		float deltaTime = (time - oldTime)/1000f;
 		oldTime = time;
 		scene.update(deltaTime);
 	}

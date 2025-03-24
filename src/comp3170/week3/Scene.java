@@ -17,7 +17,7 @@ import org.joml.Vector4f;
 import comp3170.GLBuffers;
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
-
+import static comp3170.Math.TAU;
 
 public class Scene {
 
@@ -37,7 +37,10 @@ public class Scene {
 	private Matrix4f transMatrix = new Matrix4f();
 	private Matrix4f scaleMatrix = new Matrix4f();
 	private Matrix4f rotateMatrix = new Matrix4f();
-	final private float rotation = 30f;
+	final private Vector3f offSet = new Vector3f(0.0f,0.25f,0.0f);
+	final private float rotationRate = TAU/12;
+	final private float movingSpeed = 1.0f;
+	final private float scale = 0.1f;
 
 	
 	public Scene() {
@@ -88,15 +91,12 @@ public class Scene {
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 		
 		translationMatrix(0f,0.0f, transMatrix);
-		rotationMatrix(30f,rotateMatrix);
-		scaleMatrix(1f,1f,scaleMatrix);
+		rotationMatrix(1f,rotateMatrix);
+		scaleMatrix(0.3f,0.3f,scaleMatrix);
 		
-		Vector3f offset = new Vector3f(0.0f,0.0f,0f);
-		float scale = 1f;
-		float rotation = 30f;
 		
-		modelMatrix.mul(transMatrix).mul(rotateMatrix).mul(scaleMatrix);// TRS
-//		modelMatrix.translate(offset).rotateZ(rotation).scale(scale);
+//		modelMatrix.mul(transMatrix).mul(rotateMatrix).mul(scaleMatrix);// TRS
+		modelMatrix.translate(offSet).scale(scale);
 		
 	}
 
@@ -117,7 +117,10 @@ public class Scene {
 
 	}
 	public void update(float deltaTime) {
-		modelMatrix.rotateZ(rotation * deltaTime);
+		float rotation = rotationRate * deltaTime;
+		float movement = movingSpeed * deltaTime;
+		Vector3f move = new Vector3f (0.0f,movement,0.0f);
+		modelMatrix.translate(move).rotateZ(rotation);
 	}
 
 	/**
