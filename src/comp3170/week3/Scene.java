@@ -39,7 +39,7 @@ public class Scene {
 	private Matrix4f rotateMatrix = new Matrix4f();
 	final private Vector3f offSet = new Vector3f(0.0f,0.25f,0.0f);
 	final private float rotationRate = TAU/12;
-	final private float movingSpeed = 1.0f;
+	final private float movingSpeed = 1f;
 	final private float scale = 0.1f;
 
 	
@@ -117,9 +117,13 @@ public class Scene {
 
 	}
 	public void update(float deltaTime) {
+		
 		float rotation = rotationRate * deltaTime;
-		float movement = movingSpeed * deltaTime;
+		float movement = Math.min(movingSpeed * deltaTime, 0.5f);
+//		float movement = movingSpeed * deltaTime;
+		System.out.println(movement);
 		Vector3f move = new Vector3f (0.0f,movement,0.0f);
+		
 		modelMatrix.translate(move).rotateZ(rotation);
 	}
 
@@ -164,8 +168,8 @@ public class Scene {
 
 		// TODO: Your code here
 		dest.m00((float) Math.cos(angle));
-		dest.m01((float) Math.sin(angle));
-		dest.m10((float) Math.sin(-angle));
+		dest.m01((float) -Math.sin(angle));
+		dest.m10((float) Math.sin(angle));
 		dest.m11((float) Math.cos(angle));
 		
 		return dest;
@@ -187,6 +191,7 @@ public class Scene {
 		// TODO: Your code here
 		dest.m00(sx);
 		dest.m11(sy);
+		dest.m22(1);
 
 		return dest;
 	}
