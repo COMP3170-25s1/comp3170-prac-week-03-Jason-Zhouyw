@@ -119,9 +119,8 @@ public class Scene {
 	public void update(float deltaTime) {
 		
 		float rotation = rotationRate * deltaTime;
-		float movement = Math.min(movingSpeed * deltaTime, 0.5f);
-//		float movement = movingSpeed * deltaTime;
-		System.out.println(movement);
+		System.out.println(rotation);
+		float movement = movingSpeed * deltaTime;
 		Vector3f move = new Vector3f (0.0f,movement,0.0f);
 		
 		modelMatrix.translate(move).rotateZ(rotation);
